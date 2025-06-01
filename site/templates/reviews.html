@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы о нашем Telegram боте</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0088cc;
+            --secondary-color: #24a2e0;
+            --dark-color: #2c3e50;
+            --light-color: #f5f6fa;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Hotbar стили */
+        .hotbar {
+            background-color: var(--dark-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 60px;
+        }
+
+        .hotbar-logo {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .hotbar-nav {
+            display: flex;
+        }
+
+        .hotbar-nav a {
+            color: white;
+            text-align: center;
+            padding: 20px 16px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .hotbar-nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* Основной контент */
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 40px;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        /* Секция отзывов */
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .user-info {
+            flex-grow: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .review-date {
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        .review-stars {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .review-text {
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        /* Форма добавления отзыва */
+        .add-review {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .reviews-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hotbar-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hotbar -->
+    <div class="hotbar">
+        <a href="/index" class="hotbar-logo">МойБот</a>
+        <div class="hotbar-nav">
+            <a href="/index">Главная</a>
+            <a href="features.html">Возможности</a>
+            <a href="#" class="active">Отзывы</a>
+            <a href="contacts.html">Контакты</a>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <h1>Что говорят наши пользователи</h1>
+
+        <div class="reviews-container">
+            <!-- Отзыв 1 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Анна К." class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">Анна К.</div>
+                        <div class="review-date">15 мая 2023</div>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="review-text">Этот бот изменил мой подход к работе! Теперь все задачи автоматизированы и занимают в 3 раза меньше времени. Очень удобный интерфейс и быстрая поддержка.</p>
+            </div>
+
+            <!-- Отзыв 2 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Иван П." class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">Иван П.</div>
+                        <div class="review-date">2 июня 2023</div>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                </div>
+                <p class="review-text">Отличный функционал, пользуюсь уже 2 месяца. Есть небольшие пожелания по доработке, но в целом очень доволен. Поддержка реагирует быстро и помогает решить вопросы.</p>
+            </div>
+
+            <!-- Отзыв 3 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Елена С." class="user-avatar">
+                    <div class="user-info">
+                        <div class="user-name">Елена С.</div>
+                        <div class="review-date">28 апреля 2023</div>
+                    </div>
+                </div>
+                <div class="review-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="review-text">Лучший бот в своем роде! Использую для автоматизации бизнес-процессов, экономит кучу времени. Особенно нравится система напоминаний и интеграция с Google Календарем.</p>
+            </div>
+        </div>
+
+        <!-- Форма добавления отзыва -->
+        <div class="add-review">
+            <h2>Оставьте свой отзыв</h2>
+            <form id="review-form">
+                <div class="form-group">
+                    <label for="name">Ваше имя</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email (необязательно)</label>
+                    <input type="email" id="email" name="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Оценка</label>
+                    <select id="rating" name="rating" required>
+                        <option value="5">Отлично (5 звезд)</option>
+                        <option value="4">Хорошо (4 звезды)</option>
+                        <option value="3">Удовлетворительно (3 звезды)</option>
+                        <option value="2">Плохо (2 звезды)</option>
+                        <option value="1">Ужасно (1 звезда)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="review">Ваш отзыв</label>
+                    <textarea id="review" name="review" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Отправить отзыв</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Обработка формы (можно заменить на реальную обработку)
+        document.getElementById('review-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Спасибо за ваш отзыв! После модерации он появится на сайте.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
