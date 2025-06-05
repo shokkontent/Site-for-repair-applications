@@ -1,7 +1,10 @@
 import logging
 import os
+import json
+import datetime
 
 from dotenv import load_dotenv
+from datetime import date
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (
     Application,
@@ -36,7 +39,8 @@ BOT_TOKEN = os.getenv('token', 'no_secret_token')
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG
 )
-json = {}
+request_data = {}
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Отправляет приветственное сообщение и показывает главное меню"""
@@ -142,9 +146,9 @@ async def confirm_request(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
         # Очищаем данные пользователя
         context.user_data.clear()
-    json = context.user_data
-    json["user"] = user.full_name
-    Broadcast(json)
+    request_data = context.user_data
+    request_data["user"] = user.full_name
+    Broadcast(request_data)
     return ConversationHandler.END
 
 
@@ -172,8 +176,14 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         "Здесь будет отображаться история ваших заявок.",
         reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True)
     )'''
+
+
 def Broadcast(slovar):
-    print(slovar)
+    today = date.today()
+    slovar['time'] = str(today)
+    with open('users.json', 'w', encoding='utf-8') as file:
+        json.dump(slovar, file, ensure_ascii=False, indent=4)
+
 
 def main() -> None:
     """Запуск бота"""
